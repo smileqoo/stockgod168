@@ -43,12 +43,12 @@ def send_message(filename,output):
 #關鍵字單次發送股票資訊
 def send_one_stock_message(filename):
     output = tower_line.search_data(filename)
-    send_message(filename,output)
+    send_message('寶塔線+'+filename,output)
 
 #關鍵字單次發送股票資訊---★NEW 飆股
 def send_one_stock_message2(filename):
     output = strong_stock_20ma.search_data(filename)
-    send_message(filename,output)
+    send_message('飆股+'+filename,output)
 
 
 #列印出資料(改成字典格式讀取)
@@ -176,6 +176,7 @@ app = Flask(__name__)
 line_bot_api = LineBotApi(os.environ.get("CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.environ.get("CHANNEL_SECRET"))
 
+
 stock_data1 = {} #上市
 stock_data2 = {} #上櫃
 
@@ -220,5 +221,3 @@ def handler_message(event):
             msg = TextSendMessage(text='請重新輸入正確格式搜尋【飆股+上市or飆股+上櫃】')
             line_bot_api.reply_message(re_token,msg)
         
-   
-

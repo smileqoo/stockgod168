@@ -56,9 +56,7 @@ def main(codes):
 
     volume = stock_no.history(period='1d')['Volume'][-1]//1000   #成交量
     volume_5day = sum(stock_no.history(period='6d')['Volume'][:5])//1000//5 #★增加_當天前5日平均交易量
-    close_price = stock_no.history(period='2d')['Close'] #2天收盤價
-    up_down_rate = str(round(((close_price[-1]-close_price[-2])/close_price[-2])*100,2)) + '%'
-    #↑漲跌幅
+    
     
     if volume >= 1000 and volume >= volume_5day*2: #★測試當日有沒有比前5日爆2倍大量
         
@@ -68,6 +66,10 @@ def main(codes):
         #print(close) #測試收盤輸出列表
         close_data.append(999999) #添加最後一個數字，才不會有誤
 
+
+        close_price = stock_no.history(period='2d')['Close'] #2天收盤價
+        up_down_rate = str(round(((close_price[-1]-close_price[-2])/close_price[-2])*100,2)) + '%'
+        #↑漲跌幅
         ema(close_data,20,codes,up_down_rate,volume) #加入漲跌幅、成交量
 
 
