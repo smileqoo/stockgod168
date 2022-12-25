@@ -5,6 +5,7 @@ from linebot.models import MessageEvent,TextMessage,TextSendMessage
 import tower_line
 import requests,os,datetime
 from concurrent.futures import ThreadPoolExecutor
+import strong_stock_20ma
 
 #Line_notify模塊
 def line_notify(msg):
@@ -42,6 +43,11 @@ def send_message(filename,output):
 #關鍵字單次發送股票資訊
 def send_one_stock_message(filename):
     output = tower_line.search_data(filename)
+    send_message(filename,output)
+
+#關鍵字單次發送股票資訊---★NEW 飆股
+def send_one_stock_message2(filename):
+    output = strong_stock_20ma.search_data(filename)
     send_message(filename,output)
 
 
@@ -203,8 +209,16 @@ def handler_message(event):
         msg = TextSendMessage(text='監控系統已啟動')
         line_bot_api.reply_message(re_token,msg)
         view_time()
-        
 
+#----★NEW
+    if '飆股' in mtext:
+        if '上市' in mtext:
+            send_one_stock_message2('上市公司代碼.csv') 
+        elif '上櫃' in mtext:
+            send_one_stock_message2('上櫃公司代碼.csv') 
+        else:
+            msg = TextSendMessage(text='請重新輸入正確格式搜尋【飆股+上市or飆股+上櫃】')
+            line_bot_api.reply_message(re_token,msg)
         
    
 
