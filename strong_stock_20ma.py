@@ -36,6 +36,7 @@ def search_data(open_filename):
 
 def main(codes):
     global output
+    time.sleep(0.5)
     
     
     #stock_name = input('請輸入要搜尋的股票代碼:')
