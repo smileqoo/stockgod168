@@ -53,8 +53,9 @@ def send_one_stock_message2(filename):
 
 #關鍵字單次發送股票資訊---★NEW 跌深反彈(2023.3.5)
 def send_one_stock_message3(filename):
-    output = rebound_10ma.search_data(filename)
+    output,stock_no = rebound_10ma.search_data(filename) #stock_no->股票代號
     send_message('跌深反彈+'+filename,output)
+    line_notify(stock_no)
 
 
 #列印出資料(改成字典格式讀取)

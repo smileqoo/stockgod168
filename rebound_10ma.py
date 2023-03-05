@@ -38,7 +38,7 @@ def search_data(open_filename):
 
     with ThreadPoolExecutor(max_workers=200) as executor: #★增加多線程數量
         executor.map(main,rows)
-    return output
+    return output,stock_data[:-1]
 
 def main(codes):
     global output
