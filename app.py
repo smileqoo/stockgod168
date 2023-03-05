@@ -6,6 +6,7 @@ import tower_line
 import requests,os,datetime
 from concurrent.futures import ThreadPoolExecutor
 import strong_stock_20ma
+import rebound_10ma
 
 #Line_notify模塊
 def line_notify(msg):
@@ -49,6 +50,11 @@ def send_one_stock_message(filename):
 def send_one_stock_message2(filename):
     output = strong_stock_20ma.search_data(filename)
     send_message('飆股+'+filename,output)
+
+#關鍵字單次發送股票資訊---★NEW 跌深反彈(2023.3.5)
+def send_one_stock_message3(filename):
+    output = rebound_10ma.search_data(filename)
+    send_message('跌深反彈+'+filename,output)
 
 
 #列印出資料(改成字典格式讀取)
@@ -219,5 +225,15 @@ def handler_message(event):
             send_one_stock_message2('上櫃公司代碼.csv') 
         else:
             msg = TextSendMessage(text='請重新輸入正確格式搜尋【飆股+上市or飆股+上櫃】')
+            line_bot_api.reply_message(re_token,msg)
+
+#----★NEW (2023.3.5)
+    if '跌深反彈' in mtext:
+        if '上市' in mtext:
+            send_one_stock_message3('上市公司代碼.csv') 
+        elif '上櫃' in mtext:
+            send_one_stock_message3('上櫃公司代碼.csv') 
+        else:
+            msg = TextSendMessage(text='請重新輸入正確格式搜尋【跌深反彈+上市or跌深反彈+上櫃】')
             line_bot_api.reply_message(re_token,msg)
         
