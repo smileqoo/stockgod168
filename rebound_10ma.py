@@ -32,6 +32,7 @@ def ema(list_close,ema_num,stock_name,up_down_rate,volume):   #1參數:收盤列
 
 #抓取資料儲存在output        
 def search_data(open_filename):
+    global stock_data
     output.clear()
     stock_data = '' #清除字串
     with open(open_filename,'r') as f:   #★媽媽電腦:多加解碼encoding='UTF-8'，不然會報錯cp950
