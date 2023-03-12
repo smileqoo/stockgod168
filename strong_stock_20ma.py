@@ -1,14 +1,14 @@
-#飆股(大於5日成交量)+20ma
+#飆股(大於5日成交量)+20ma+60K小時次數
 import yfinance as yf
 from concurrent.futures import ThreadPoolExecutor
 import csv
 import time
 
 
-def ema(list_close,ema_num,stock_name,up_down_rate,volume):   #1參數:收盤列表,2參數:設定均線數值,3參數:股票代碼,4參數:漲跌幅,5參數:成交量
+def ema(list_close,ema_num,stock_name,up_down_rate,volume,date_num):   #1參數:收盤列表,2參數:設定均線數值,3參數:股票代碼,4參數:漲跌幅,5參數:成交量,6參數:最新60K日期數量
   
-    sum_num = 0
-    for i in range(0,5): #5->當日5跟K棒跟前一個K棒比較
+    global stock_data
+    for i in range(0,date_num): #★改_直接抓取最新日期60K數量
         ma1 = round(sum(list_close[-(ema_num+1)-i:-1-i])/ema_num,2)
         ma2 = round(sum(list_close[-(ema_num+1)-i-1:-1-i-1])/ema_num,2) #往後移一個
 
@@ -21,22 +21,23 @@ def ema(list_close,ema_num,stock_name,up_down_rate,volume):   #1參數:收盤列
             #output.append([stock_name[0],stock_name[1],stock_name[2],up_down_rate,volume])
             output[stock_name[0]]=[stock_name[0],stock_name[1],stock_name[2],up_down_rate,volume]
             # ↑存到字典-new★
+            stock_data += stock_name[0] + ','#★增加代碼列表 
             break #只要搜尋到一個就加入清單跳出
 
 #抓取資料儲存在output        
 def search_data(open_filename):
+    global stock_data
     output.clear()
-    #output.append([open_filename.split('.')[0]])
+    stock_data = '' #清除字串
     with open(open_filename,'r') as f:   #★媽媽電腦:多加解碼encoding='UTF-8'，不然會報錯cp950
-        rows = list(csv.reader(f))[1:]
+        rows = list(csv.reader(f))
 
     with ThreadPoolExecutor(max_workers=200) as executor: #★增加多線程數量
         executor.map(main,rows)
-    return output
+    return output,stock_data[:-1]
 
 def main(codes):
     global output
-    time.sleep(0.5)
     
     
     #stock_name = input('請輸入要搜尋的股票代碼:')
@@ -71,11 +72,14 @@ def main(codes):
         close_price = stock_no.history(period='2d')['Close'] #2天收盤價
         up_down_rate = str(round(((close_price[-1]-close_price[-2])/close_price[-2])*100,2)) + '%'
         #↑漲跌幅
-        ema(close_data,20,codes,up_down_rate,volume) #加入漲跌幅、成交量
+        date = stock_close.index[-1].strftime('%Y-%m-%d') #★★抓取最新日期
+        date_num = len(stock_close[date]) #★★抓取最新日期數量
+        
+        ema(close_data,20,codes,up_down_rate,volume,date_num) #加入漲跌幅、成交量、★日期數量
 
 
 output = {}
-
+stock_data = '' #★代碼列表
 
 
 

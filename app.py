@@ -48,8 +48,9 @@ def send_one_stock_message(filename):
 
 #關鍵字單次發送股票資訊---★NEW 飆股
 def send_one_stock_message2(filename):
-    output = strong_stock_20ma.search_data(filename)
+    output,stock_no = strong_stock_20ma.search_data(filename) #增加代碼列表stock_no(2023.3.13)
     send_message('飆股+'+filename,output)
+    line_notify(stock_no) #發送代碼(2023.3.13)
 
 #關鍵字單次發送股票資訊---★NEW 跌深反彈(2023.3.5)
 def send_one_stock_message3(filename):
