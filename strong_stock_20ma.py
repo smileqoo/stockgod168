@@ -60,7 +60,7 @@ def main(codes):
     volume_5day = sum(stock_no.history(period='6d')['Volume'][:5])//1000//5 #★增加_當天前5日平均交易量
     
     
-    if volume >= 1000 and volume >= volume_5day*2: #★測試當日有沒有比前5日爆2倍大量
+    if volume >= 1000 and volume >= volume_5day*2*0.8 #★測試當日有沒有比前5日爆2倍大量*0.8(打8折)
         
         close_data = []
         for i in stock_close:
